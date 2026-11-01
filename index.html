@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Laporkan dan pantau kondisi fasilitas publik bersama SAMARA.">
+    <title>SAMARA - Sistem Aduan Masyarakat untuk Aksi Responsif dan Akuntable</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/city-buildings.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <!-- ===== LOADING SCREEN SAMARA ===== -->
+    <div id="samaraLoader" class="samara-loader" aria-hidden="true" role="status">
+        <div class="samara-loader-inner">
+            <div class="samara-loader-logo">
+                <svg viewBox="0 0 48 48" width="72" height="72" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="loaderGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#1e9e82"></stop>
+                            <stop offset="1" stop-color="#145568"></stop>
+                        </linearGradient>
+                    </defs>
+                    <rect x="1" y="1" width="46" height="46" rx="15" fill="url(#loaderGrad)"></rect>
+                    <path d="M7 36h34M10 36V24h8v12m2 0V19h8v17m2 0V26h8v10"
+                        fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    <path d="M14 28h.1m0 4h.1m9-9h.1m0 4h.1m0 4h.1m9-2h.1m0 4h.1"
+                        stroke="#a9e3ce" stroke-width="2.2" stroke-linecap="round"></path>
+                </svg>
+            </div>
+            <h1 class="samara-loader-title">SAMARA</h1>
+            <p class="samara-loader-subtitle">KOTA BANDAR LAMPUNG</p>
+            <p class="samara-loader-tagline">Sistem Aduan Masyarakat untuk Aksi Responsif dan Akuntabel</p>
+            <div class="samara-loader-bar-track">
+                <div class="samara-loader-bar" id="samaraLoaderBar"></div>
+            </div>
+            <p class="samara-loader-status" id="samaraLoaderStatus">Memuat halaman...</p>
+        </div>
+    </div>
+    <!-- ===== END LOADING SCREEN ===== -->
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#beranda" class="logo" aria-label="SAMARA, kembali ke beranda">
+                <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                    <defs>
+                        <linearGradient id="logoMarkGradient" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#16856e"></stop>
+                            <stop offset="1" stop-color="#145568"></stop>
+                        </linearGradient>
+                    </defs>
+                    <rect class="logo-mark-bg" x="1" y="1" width="46" height="46" rx="15" fill="url(#logoMarkGradient)">
+                    </rect>
+                    <path d="M7 36h34M10 36V24h8v12m2 0V19h8v17m2 0V26h8v10" fill="none" stroke="#fff"
+                        stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M14 28h.1m0 4h.1m9-9h.1m0 4h.1m0 4h.1m9-2h.1m0 4h.1" stroke="#a9e3ce" stroke-width="2.2"
+                        stroke-linecap="round"></path>
+                    <circle class="logo-pulse" cx="34" cy="13" r="8" fill="none" stroke="#ffd166" stroke-width="1.5">
+                    </circle>
+                    <path class="logo-pin" d="M34 7.5a5 5 0 0 0-5 5c0 3.7 5 8.5 5 8.5s5-4.8 5-8.5a5 5 0 0 0-5-5Z"
+                        fill="#ffd166" stroke="#145568" stroke-width="1.2"></path>
+                    <circle cx="34" cy="12.5" r="1.7" fill="#145568"></circle>
+                    <path class="logo-spark" d="m8 13 1-2 1 2 2 1-2 1-1 2-1-2-2-1 2-1Z" fill="#ffd166"></path>
+                </svg>
+                <span class="logo-text-group">
+                    <span class="logo-wordmark">SAMARA</span>
+                    <span class="logo-tagline">Sistem Aduan Masyarakat untuk Aksi Responsif dan Akuntable</span>
+                </span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#beranda" class="active">Beranda</a></li>
+                <li><a href="#lapor">Lapor</a></li>
+                <li><a href="#lacak">Lacak</a></li>
+                <li><a href="#peta">Peta</a></li>
+                <li><a href="#edukasi">Edukasi</a></li>
+                <li><button type="button" class="weather-trigger" id="adminAccess"
+                    aria-controls="adminDashboard">Admin</button></li>
+                <li>
+                    <button type="button" class="weather-trigger" id="btnCuaca" aria-haspopup="dialog"
+                        aria-controls="weatherModal">
+                        <span aria-hidden="true">🌤️</span> Cuaca
+                    </button>
+                </li>
+            </ul>
+            <div class="nav-actions">
+                <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu"
+                    aria-label="Buka menu navigasi">
+                    <span></span><span></span><span></span>
+                </button>
+                <a class="city-emblem" href="#beranda" aria-label="Kembali ke beranda SAMARA">
+                    <img src="logo-bandar-lampung.png" alt="Lambang Kota Bandar Lampung">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <dialog class="admin-login-dialog" id="adminLoginDialog" aria-labelledby="adminLoginTitle">
+        <form id="adminLoginForm">
+            <h2 id="adminLoginTitle">Login Admin</h2>
+            <p>Masuk untuk melihat dan mengelola laporan warga.</p>
+            <label for="adminPassword">Kata sandi Admin</label>
+            <input type="password" id="adminPassword" name="password" autocomplete="current-password"
+                required maxlength="1024">
+            <p id="adminLoginError" class="admin-login-error" role="alert" aria-live="polite"></p>
+            <div class="admin-login-actions">
+                <button type="button" class="btn btn-outline-danger" id="adminLoginCancel">Batal</button>
+                <button type="submit" class="btn btn-primary">Masuk</button>
+            </div>
+        </form>
+    </dialog>
+
+    <aside id="apiErrorNotice" class="api-error-notice" role="alert" hidden>
+        <span id="apiErrorMessage"></span>
+        <button type="button" id="btnCloseApiError" aria-label="Tutup pemberitahuan">&times;</button>
+    </aside>
+
+    <main>
+        <section class="hero" id="beranda">
+            <div class="container hero-layout">
+                <div class="hero-copy">
+                    <span class="badge">🌍 SDG 11 <span aria-hidden="true">•</span> Kota Berkelanjutan</span>
+                    <h1>Perubahan kota<br>dimulai dari <span class="highlight">warga.</span></h1>
+                    <p>Temukan masalah di sekitar, laporkan dengan mudah, lalu pantau perkembangannya. Bersama kita
+                        wujudkan Bandar Lampung yang lebih nyaman.</p>
+                    <div class="hero-buttons">
+                        <a href="#lapor" class="btn btn-primary">📝 Buat Laporan</a>
+                        <a href="#lacak" class="btn btn-outline">🔍 Lacak Laporan</a>
+                    </div>
+                    <p class="hero-note"><span aria-hidden="true">🔒</span> Laporan disimpan di database server.</p>
+                </div>
+                <aside class="hero-card" aria-label="Langkah mudah menggunakan SmartWarga">
+                    <div class="hero-card-top">
+                        <span class="hero-card-icon" aria-hidden="true">🏙️</span>
+                        <span class="hero-card-label">Warga bergerak, kota bertumbuh</span>
+                    </div>
+                    <h2>Aksi kecil, dampak nyata.</h2>
+                    <p>Mulai dari satu laporan yang jelas dan lokasi yang tepat.</p>
+                    <div class="hero-card-steps">
+                        <div><span>01</span><strong>Temukan masalah</strong><span aria-hidden="true">✓</span></div>
+                        <div><span>02</span><strong>Kirim laporan</strong><span aria-hidden="true">→</span></div>
+                        <div><span>03</span><strong>Pantau prosesnya</strong><span aria-hidden="true">⌁</span></div>
+                    </div>
+                    <a href="#cara-kerja" class="hero-card-link">Lihat cara kerjanya <span
+                            aria-hidden="true">↗</span></a>
+            </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-number" id="totalLaporan">0</div>
+                        <div class="stat-label">Total Laporan</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✔️</div>
+                        <div class="stat-number" id="totalSelesai">0</div>
+                        <div class="stat-label">Selesai Ditangani</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-number" id="totalProses">0</div>
+                        <div class="stat-label">Sedang Diproses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👤</div>
+                        <div class="stat-number" id="totalWarga">0</div>
+                        <div class="stat-label">Warga Aktif</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-sdg">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badge">🌱 Sustainable Development Goals</span>
+                    <h2>Mendukung SDG 11: Kota & Permukiman Berkelanjutan</h2>
+                </div>
+                <div class="sdg-content">
+                    <div class="sdg-text">
+                        <p>SDG 11 bertujuan menjadikan kota dan permukiman <strong>inklusif, aman, tangguh, dan
+                                berkelanjutan</strong>. Target 11.3 mendorong pengelolaan permukiman yang
+                            <strong>partisipatif</strong>.
+                        </p>
+                        <p>SAMARA memberdayakan warga untuk memantau dan melaporkan kondisi fasilitas publik,
+                            menciptakan tata kelola kota yang transparan dan berbasis data.</p>
+                        <div class="sdg-features">
+                            <div class="feature">
+                                <span class="feature-icon">🤝</span>
+                                <div>
+                                    <h4>Partisipatif</h4>
+                                    <p>Warga terlibat aktif dalam pengawasan kota</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">📍</span>
+                                <div>
+                                    <h4>Transparan</h4>
+                                    <p>Status laporan dapat dilacak siapa saja</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">🧠</span>
+                                <div>
+                                    <h4>Cerdas</h4>
+                                    <p>Berbasis data dan teknologi modern</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="cara-kerja">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Cara Kerja SAMARA</h2>
+                    <p>Hanya 3 langkah mudah untuk berpartisipasi</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Laporkan</h3>
+                        <p>Isi form laporan dengan foto, lokasi, dan deskripsi kerusakan fasilitas publik.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Pantau</h3>
+                        <p>Lacak status laporan Anda dari Diterima hingga Selesai.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Nikmati</h3>
+                        <p>Rasakan fasilitas publik yang lebih baik berkat kolaborasi warga dan pemerintah.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-header" id="lapor">
+            <div class="container">
+                <h1>📝 Buat Laporan di Bandar Lampung</h1>
+                <p>Laporkan kerusakan fasilitas publik di wilayah Bandar Lampung.</p>
+            </div>
+        </section>
+        <section class="form-section">
+            <div class="container">
+                <form id="formLaporan" class="form-card">
+                    <p class="form-intro" id="formStorageNotice" role="note">
+                        Laporan disimpan di database server dan dapat dilihat Admin setelah login.
+                    </p>
+                    <div class="form-group">
+                        <label for="nama">Nama Pelapor *</label>
+                        <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kategori">Kategori Kerusakan *</label>
+                        <select id="kategori" name="kategori" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="Jalan Rusak">🛣️ Jalan Rusak</option>
+                            <option value="Lampu Mati">💡 Lampu Penerangan Mati</option>
+                            <option value="Drainase">🌊 Drainase Tersumbat</option>
+                            <option value="Taman">🌳 Taman/Fasilitas Umum Rusak</option>
+                            <option value="Sampah">🗑️ Penumpukan Sampah</option>
+                            <option value="Lainnya">📌 Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat">Alamat/Lokasi *</label>
+                        <input type="text" id="alamat" name="alamat"
+                            placeholder="Contoh: Jl. Merdeka No. 10, Bandar Lampung" required>
+                        <p id="addressMapStatus" class="address-map-status" role="status" aria-live="polite"></p>
+                        <div id="addressCandidates" class="address-candidates" aria-label="Hasil pencarian alamat">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mapForm">Lokasi di Peta (Bandar Lampung)</label>
+                        <div id="mapForm" style="height: 300px; border-radius: 10px; margin-bottom: 10px;"></div>
+                        <small>Pencarian alamat menggunakan <a href="https://www.openstreetmap.org/copyright"
+                                target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>.
+                            Pencarian dilakukan setelah Anda selesai mengetik dan meninggalkan kolom alamat.
+                            Pilih hasil yang paling sesuai dan pastikan pin sudah tepat sebelum mengirim
+                            laporan.</small>
+                        <button type="button" id="btnLokasi" class="btn btn-outline btn-sm">📍 Gunakan Lokasi
+                            Saya</button>
+                        <input type="hidden" id="lat" name="lat">
+                        <input type="hidden" id="lng" name="lng">
+                    </div>
+                    <div class="form-group">
+                        <label for="deskripsi">Deskripsi Kerusakan *</label>
+                        <textarea id="deskripsi" name="deskripsi" rows="4" aria-describedby="descriptionCount"
+                            placeholder="Jelaskan kerusakan secara detail..." required></textarea>
+                        <small id="descriptionCount" class="input-counter" aria-live="polite">0 karakter</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="foto">Upload Foto Bukti</label>
+                        <input type="file" id="foto" name="foto" accept="image/jpeg,image/png"
+                            aria-describedby="photoHelp photoStatus">
+                        <small id="photoHelp">Format: JPG, PNG. Maks: 2 MB</small>
+                        <p id="photoStatus" class="photo-status" role="status" aria-live="polite"></p>
+                        <div id="photoPreview" class="photo-preview" hidden>
+                            <img id="photoPreviewImage" alt="Pratinjau foto bukti yang dipilih">
+                            <div class="photo-preview-info">
+                                <strong id="photoPreviewName"></strong>
+                                <span>Foto siap dilampirkan</span>
+                            </div>
+                            <button type="button" id="btnHapusFoto" class="photo-remove">Hapus</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">🚀 Kirim Laporan</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="page-header" id="lacak">
+            <div class="container">
+                <h1>🔍 Lacak Status Laporan</h1>
+                <p>Cari laporan berdasarkan ID atau email. Status dan keterangan tindak lanjut dikelola oleh Admin.</p>
+            </div>
+        </section>
+        <section class="track-section">
+            <div class="container">
+                <div class="track-box">
+                    <div class="form-group">
+                        <label for="searchLaporan">Cari Laporan</label>
+                        <div class="search-group">
+                            <input type="text" id="searchLaporan" placeholder="Masukkan ID Laporan atau Email">
+                            <button id="btnCari" class="btn btn-primary">Cari</button>
+                        </div>
+                    </div>
+                    <div class="track-actions"
+                        style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+                        <small style="color: var(--gray); font-size: 0.82rem;">Gunakan ID laporan atau email untuk
+                            melihat status dan keterangan tindak lanjut.</small>
+                    </div>
+                </div>
+                <div id="hasilLacak" class="hasil-lacak" style="display: none;"></div>
+            </div>
+        </section>
+
+        <section class="admin-dashboard" id="adminDashboard" hidden aria-labelledby="adminDashboardTitle">
+            <div class="container">
+                <div class="admin-dashboard-heading">
+                    <div>
+                        <span class="admin-role-badge">ADMIN</span>
+                        <h2 id="adminDashboardTitle">Dashboard Admin</h2>
+                        <p>Lihat semua laporan dan perbarui status serta keterangan tindak lanjut.</p>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger" id="adminLogout">Keluar</button>
+                </div>
+                <div class="admin-stat-grid" aria-label="Ringkasan laporan">
+                    <article><span>Total laporan</span><strong id="adminTotal">0</strong></article>
+                    <article><span>Warga melapor</span><strong id="adminWarga">0</strong></article>
+                    <article><span>Dalam proses</span><strong id="adminProses">0</strong></article>
+                    <article><span>Selesai</span><strong id="adminSelesai">0</strong></article>
+                </div>
+                <h3 class="admin-list-title">Semua Laporan</h3>
+                <div id="adminReports" class="admin-report-list" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <section class="page-header" id="peta">
+            <div class="container">
+                <h1>🗺️ Peta Sebaran Bandar Lampung</h1>
+                <p>Lihat sebaran laporan fasilitas publik di wilayah Bandar Lampung.</p>
+            </div>
+        </section>
+        <section class="map-section">
+            <div class="container">
+                <div class="map-filter">
+                    <button class="filter-btn active" data-filter="all">Semua</button>
+                    <button class="filter-btn" data-filter="Diterima">🟡 Diterima</button>
+                    <button class="filter-btn" data-filter="Diproses">🟠 Diproses</button>
+                    <button class="filter-btn" data-filter="Ditindaklanjuti">🔵 Ditindaklanjuti</button>
+                    <button class="filter-btn" data-filter="Selesai">🟢 Selesai</button>
+                </div>
+                <div id="mapFull" style="height: 600px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                </div>
+                <p style="margin-top: 0.75rem; color: var(--gray);">Peta dan laporan dibatasi pada area Bandar Lampung.
+                </p>
+                <div class="map-legend">
+                    <h4>Keterangan:</h4>
+                    <div class="legend-items">
+                        <span><span class="dot dot-yellow"></span> Diterima</span>
+                        <span><span class="dot dot-orange"></span> Diproses</span>
+                        <span><span class="dot dot-blue"></span> Ditindaklanjuti</span>
+                        <span><span class="dot dot-green"></span> Selesai</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-header" id="edukasi">
+            <div class="container">
+                <h1>📚 Edukasi & Panduan Warga</h1>
+                <p>Empowering Global Innovators for an Intelligent Future</p>
+            </div>
+        </section>
+        <section class="form-section">
+            <div class="container">
+                <div class="sdg-content">
+                    <h2
+                        style="background: var(--gradient-smart); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; margin-bottom: 1rem;">
+                        Apa itu SDG 11?</h2>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--gray);">
+                        <strong>Sustainable Development Goals (SDG) 11</strong> bertujuan menjadikan kota dan
+                        permukiman <strong>inklusif, aman, tangguh, dan berkelanjutan</strong>. Target 11.3 mendorong
+                        urbanisasi yang inklusif dan pengelolaan permukiman yang partisipatif, terpadu, dan
+                        berkelanjutan.
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--gray); margin-top: 1rem;">
+                        <strong>SAMARA</strong> memberdayakan masyarakat untuk memantau, melaporkan, dan mengawasi
+                        kondisi fasilitas publik di lingkungan mereka.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="how-it-works" style="background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badge" style="background: rgba(37, 99, 235, 0.1); color: var(--primary);">📖 Panduan
+                        Lengkap</span>
+                    <h2>Panduan & Informasi Penting</h2>
+                    <p>Pelajari cara menggunakan SAMARA dan kenali target pengguna platform kami</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">📖</div>
+                        <h3>Panduan Melapor</h3>
+                        <p style="text-align: left; line-height: 1.8;">
+                            1. Buka menu <strong>Lapor</strong>.<br>
+                            2. Isi nama dan email.<br>
+                            3. Pilih kategori kerusakan.<br>
+                            4. Tandai lokasi di peta atau gunakan GPS.<br>
+                            5. Kirim laporan dan simpan ID untuk tracking.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">👥</div>
+                        <h3>Target Pengguna</h3>
+                        <p style="text-align: left; line-height: 1.8;">
+                            SAMARA membantu warga melaporkan kerusakan, pengurus RT/RW memantau laporan, dan
+                            pemerintah daerah mendapatkan data untuk perencanaan kota.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">💡</div>
+                        <h3>Tips Warga Cerdas</h3>
+                        <p style="text-align: left; line-height: 1.8;">
+                            🌱 Jaga kebersihan lingkungan.<br>
+                            🌳 Rawat fasilitas umum.<br>
+                            📸 Sertakan informasi yang jelas.<br>
+                            🤝 Ajak warga lain untuk berpartisipasi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="form-section" style="background: white;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--secondary);">❓
+                        FAQ</span>
+                    <h2>Pertanyaan yang Sering Diajukan</h2>
+                </div>
+                <div class="sdg-content" style="max-width: 900px; margin: 0 auto;">
+                    <details class="faq-item">
+                        <summary>Apakah laporan saya benar-benar ditindaklanjuti?</summary>
+                        <p>Admin dapat melihat laporan di dashboard dan memperbarui status serta keterangan progresnya.
+                            Pembaruan status menunjukkan informasi yang dimasukkan Admin, bukan konfirmasi resmi dari
+                            dinas terkait.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Bagaimana cara melacak status laporan?</summary>
+                        <p>Masukkan ID laporan atau email yang digunakan saat melapor pada bagian <a
+                                href="#lacak">Lacak</a>. Status dan keterangan progres diperbarui oleh Admin, lalu dapat
+                            dilihat warga di halaman ini. Status Ditindaklanjuti berwarna biru dan Selesai berwarna hijau.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Di mana laporan saya disimpan?</summary>
+                        <p>Saat aplikasi dijalankan melalui server.py, laporan disimpan di database SQLite server dan
+                            dapat dilihat Admin yang masuk. Jika halaman dibuka langsung sebagai file, aplikasi memakai
+                            penyimpanan lokal browser dan fitur Admin tidak tersedia.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Mengapa alamat yang saya ketik tidak muncul?</summary>
+                        <p>Pencarian alamat menggunakan data OpenStreetMap dan dibatasi ke wilayah Bandar Lampung. Tidak
+                            semua alamat, terutama nomor rumah atau alamat baru, tersedia di peta. Coba gunakan nama
+                            jalan atau patokan yang lebih dikenal. Jika tetap tidak ditemukan, pilih titik langsung pada
+                            peta atau gunakan GPS, lalu pastikan pin sudah tepat.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Bagaimana cara memilih lokasi laporan di peta?</summary>
+                        <p>Anda dapat memilih salah satu kandidat hasil pencarian alamat, mengeklik titik langsung pada
+                            peta, atau menekan tombol Gunakan Lokasi Saya. Lokasi harus berada di Bandar Lampung.
+                            Periksa pin sebelum mengirim laporan.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Apakah semua alamat tersedia di Google Maps?</summary>
+                        <p>Peta menggunakan Google Maps JavaScript API untuk menampilkan peta, sedangkan pencarian
+                            alamat menggunakan OpenStreetMap. Ketersediaan alamat bergantung pada data peta yang
+                            digunakan dan tidak ada layanan yang menjamin semua alamat, termasuk nomor rumah, selalu
+                            tersedia.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Apakah foto bukti wajib diunggah?</summary>
+                        <p>Tidak. Foto bersifat opsional. Jika ingin mengunggah foto, gunakan format JPG atau PNG dengan
+                            ukuran maksimal 2 MB.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Mengapa laporan saya tidak terlihat di perangkat lain?</summary>
+                        <p>Laporan disimpan secara lokal di browser dan perangkat tempat laporan dibuat. Data tidak
+                            tersinkron ke perangkat lain atau dikirim ke admin. Menghapus data browser juga dapat
+                            menghapus laporan yang tersimpan.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Bagaimana cara melihat cuaca di kecamatan tertentu?</summary>
+                        <p>Buka menu Cuaca untuk melihat kondisi terkini seluruh kecamatan Bandar Lampung sekaligus.
+                            Data diperbarui otomatis saat panel terbuka dan dapat dimuat ulang kapan saja. Data
+                            Open-Meteo merupakan estimasi model untuk grid terdekat, bukan pengukuran sensor langsung.
+                        </p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Apa hubungan SmartWarga dengan SDG 11?</summary>
+                        <p>SmartWarga mendukung Target 11.3 melalui partisipasi warga dalam membangun kota yang
+                            berkelanjutan.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+        <section class="stats" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Bandar Lampung & SDG 11</h2>
+                    <p>Data penduduk kota dan fakta pembangunan berkelanjutan</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏙️</div>
+                        <div class="stat-number">1.088.200</div>
+                        <div class="stat-label">
+                            Perkiraan penduduk Bandar Lampung (pertengahan 2025)
+                            <br>
+                            <a href="https://bandarlampungkota.bps.go.id/id/publication" target="_blank"
+                                rel="noopener noreferrer">Sumber: BPS Kota Bandar Lampung,
+                                <em>Kota Bandar Lampung Dalam Angka 2026</em></a>
+                        </div>
+                    </div>
+                    <button type="button" class="stat-card sdg-goals-trigger" id="sdgGoalsTrigger"
+                        aria-haspopup="dialog" aria-controls="sdgGoalsDialog">
+                        <span class="stat-icon" aria-hidden="true">🌍</span>
+                        <span class="stat-number">17</span>
+                        <span class="stat-label">Tujuan SDGs yang harus dicapai 2030<br><span class="sdg-card-hint">Klik
+                                untuk melihat 17 tujuan global</span></span>
+                    </button>
+                    <button type="button" class="stat-card sdg-goals-trigger" id="sdgTargetsTrigger"
+                        aria-haspopup="dialog" aria-controls="sdgTargetsDialog">
+                        <span class="stat-icon" aria-hidden="true">🎯</span>
+                        <span class="stat-number">169</span>
+                        <span class="stat-label">Target spesifik dalam 17 SDGs<br><span class="sdg-card-hint">Klik untuk
+                                melihat rincian 169 target & data akurat</span></span>
+                    </button>
+                    <button type="button" class="stat-card sdg-goals-trigger" id="sdg11Trigger" aria-haspopup="dialog"
+                        aria-controls="sdgTargetsDialog">
+                        <span class="stat-icon" aria-hidden="true">🏘️</span>
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Target dalam SDG 11<br><span class="sdg-card-hint">Klik untuk target
+                                kota berkelanjutan</span></span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <dialog class="sdg-dialog" id="sdgGoalsDialog" aria-labelledby="sdgDialogTitle">
+        <div class="sdg-dialog-header">
+            <div>
+                <span class="badge">Agenda 2030</span>
+                <h2 id="sdgDialogTitle">17 Tujuan Pembangunan Berkelanjutan</h2>
+            </div>
+            <button type="button" class="weather-close" id="sdgDialogClose" aria-label="Tutup">&times;</button>
+        </div>
+        <p class="sdg-dialog-intro">SDGs adalah agenda global untuk pembangunan yang lebih sejahtera, inklusif, dan
+            berkelanjutan. Berikut 17 tujuannya:</p>
+        <ol class="sdg-goal-list">
+            <li>Tanpa Kemiskinan</li>
+            <li>Tanpa Kelaparan</li>
+            <li>Kehidupan Sehat dan Sejahtera</li>
+            <li>Pendidikan Berkualitas</li>
+            <li>Kesetaraan Gender</li>
+            <li>Air Bersih dan Sanitasi Layak</li>
+            <li>Energi Bersih dan Terjangkau</li>
+            <li>Pekerjaan Layak dan Pertumbuhan Ekonomi</li>
+            <li>Industri, Inovasi, dan Infrastruktur</li>
+            <li>Berkurangnya Kesenjangan</li>
+            <li>Kota dan Permukiman yang Berkelanjutan</li>
+            <li>Konsumsi dan Produksi yang Bertanggung Jawab</li>
+            <li>Penanganan Perubahan Iklim</li>
+            <li>Ekosistem Lautan</li>
+            <li>Ekosistem Daratan</li>
+            <li>Perdamaian, Keadilan, dan Kelembagaan yang Tangguh</li>
+            <li>Kemitraan untuk Mencapai Tujuan</li>
+        </ol>
+        <section class="sdg-local-evidence" aria-labelledby="sdgLocalTitle">
+            <h3 id="sdgLocalTitle">Kaitan dengan data dan arah pembangunan Bandar Lampung</h3>
+            <p>Visi dan misi resmi Kota Bandar Lampung memuat peningkatan layanan kesehatan dan pendidikan, penguatan
+                infrastruktur dan ekonomi, pembangunan berkelanjutan, tata kelola yang baik, serta perlindungan kualitas
+                lingkungan hidup. Arah ini berkaitan dengan beberapa tujuan SDGs, tetapi bukan berarti halaman ini
+                mengukur capaian seluruh 17 tujuan.</p>
+            <p>Contoh data yang dipublikasikan Dinas Lingkungan Hidup Kota Bandar Lampung: untuk 2023, estimasi timbulan
+                sampah tercatat <strong>850 ton per hari</strong> dan sampah yang ditangani <strong>845 ton per
+                    hari</strong>. DLH juga mempublikasikan SOP pemilahan sampah yang merujuk pada Perda Kota Bandar
+                Lampung Nomor 6 Tahun 2023 tentang Pengelolaan Sampah. Informasi ini relevan dengan SDG 11 dan SDG 12.
+            </p>
+            <p class="sdg-sources">Sumber resmi:
+                <a href="https://bandarlampungkota.go.id/new/visi.html" target="_blank" rel="noopener noreferrer">Visi
+                    dan Misi Pemkot Bandar Lampung</a> ·
+                <a href="https://bandarlampungkota.go.id/new/berita-12629--Jumlah-Timbulan-Sampah-di-Kota-Bandar-Lampung--2011-2023-.html"
+                    target="_blank" rel="noopener noreferrer">Data timbulan dan penanganan sampah DLH (2011–2023)</a> ·
+                <a href="https://bandarlampungkota.go.id/new/berita-12650-Inilah-SOP-Pemilahan-Sampah-Dinas-Lingkungan-Hidup-Kota-Bandar-Lampung.html"
+                    target="_blank" rel="noopener noreferrer">SOP pemilahan sampah DLH</a>.
+            </p>
+        </section>
+    </dialog>
+
+    <!-- Dialog Rincian 169 Target Spesifik dalam 17 SDGs -->
+    <dialog class="sdg-dialog sdg-targets-dialog" id="sdgTargetsDialog" aria-labelledby="sdgTargetsTitle">
+        <div class="sdg-dialog-header">
+            <div>
+                <span class="badge">Resolusi PBB A/RES/70/1 & Perpres RI 111/2022</span>
+                <h2 id="sdgTargetsTitle">169 Target Spesifik dalam 17 SDGs</h2>
+                <p class="sdg-dialog-subtitle">Data resmi terverifikasi: United Nations (UN SDGs) & Kementerian
+                    PPN/Bappenas RI</p>
+            </div>
+            <button type="button" class="weather-close" id="sdgTargetsDialogClose" aria-label="Tutup">&times;</button>
+        </div>
+
+        <!-- Filter 4 Pilar SDGs -->
+        <div class="sdg-pillars-grid">
+            <button type="button" class="pillar-card active" data-pillar="all">
+                <span class="pillar-tag">Semua Pilar</span>
+                <strong>169 Target</strong>
+                <small>17 Tujuan Global 2030</small>
+            </button>
+            <button type="button" class="pillar-card pilar-lingkungan" data-pillar="lingkungan">
+                <span class="pillar-tag">Pilar Lingkungan</span>
+                <strong>57 Target</strong>
+                <small>Termasuk SDG 11 Kota</small>
+            </button>
+            <button type="button" class="pillar-card pilar-sosial" data-pillar="sosial">
+                <span class="pillar-tag">Pilar Sosial</span>
+                <strong>46 Target</strong>
+                <small>Goal 1 - 5 (Sosial Dasar)</small>
+            </button>
+            <button type="button" class="pillar-card pilar-ekonomi" data-pillar="ekonomi">
+                <span class="pillar-tag">Pilar Ekonomi</span>
+                <strong>54 Target</strong>
+                <small>Goal 7 - 10, 17 (Ekonomi)</small>
+            </button>
+            <button type="button" class="pillar-card pilar-hukum" data-pillar="hukum">
+                <span class="pillar-tag">Pilar Tata Kelola</span>
+                <strong>12 Target</strong>
+                <small>Goal 16 (Hukum & Keadilan)</small>
+            </button>
+        </div>
+
+        <!-- Tab Navigasi -->
+        <div class="sdg-tabs-nav" role="tablist">
+            <button type="button" class="sdg-tab-btn active" id="tabBtn169" role="tab" aria-selected="true"
+                data-tab="tab-all-goals">
+                🎯 Rincian 169 Target (17 Goals)
+            </button>
+            <button type="button" class="sdg-tab-btn" id="tabBtn11" role="tab" aria-selected="false"
+                data-tab="tab-sdg11">
+                🏘️ 10 Target Spesifik SDG 11 (Fokus SmartWarga)
+            </button>
+            <button type="button" class="sdg-tab-btn" id="tabBtnSources" role="tab" aria-selected="false"
+                data-tab="tab-sources">
+                📚 Sumber Data & Dokumen Resmi
+            </button>
+        </div>
+
+        <!-- Kotak Pencarian Target Cepat -->
+        <div class="sdg-search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="targetSearchInput"
+                placeholder="Cari kata kunci (contoh: sampah, jalan, transportasi, drainase, air, iklim, kemiskinan)..."
+                aria-label="Cari target SDGs">
+            <span id="targetSearchCount" class="target-search-count">Menampilkan semua target</span>
+        </div>
+
+        <!-- TAB 1: 17 GOALS & 169 TARGETS -->
+        <div class="sdg-tab-content active" id="tab-all-goals" role="tabpanel">
+            <div class="goals-distribution-summary">
+                <p>Agenda 2030 memuat total <strong>169 Target Terukur</strong> yang diratifikasi 193 negara PBB dan
+                    dikelompokkan oleh <strong>Bappenas RI</strong> ke dalam 4 Pilar Pembangunan Berkelanjutan. Klik
+                    kartu untuk melihat target terperinci:</p>
+            </div>
+
+            <div class="sdg-goals-cards-list" id="goalsCardsList">
+                <!-- Goal 1 -->
+                <div class="goal-detail-card" data-pilar="sosial"
+                    data-keywords="goal 1 tanpa kemiskinan no poverty perlindungan sosial bantuan tunai bencana hak ekonomi fakir miskin">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #e5243b;">SDG 1</span>
+                        <div>
+                            <h4>Tanpa Kemiskinan (No Poverty)</h4>
+                            <span class="pillar-badge pilar-sosial">Pilar Sosial • 7 Target Spesifik (1.1 – 1.5, 1.a,
+                                1.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mengentaskan segala bentuk kemiskinan di mana pun pada tahun 2030.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>1.1</strong> Hapus Kemiskinan Ekstrem</span>
+                        <span class="target-code-chip"><strong>1.2</strong> Kurangi Kemiskinan Multidimensi</span>
+                        <span class="target-code-chip"><strong>1.3</strong> Jaminan Perlindungan Sosial</span>
+                        <span class="target-code-chip"><strong>1.4</strong> Hak atas Sumber Daya & Layanan Dasar</span>
+                        <span class="target-code-chip"><strong>1.5</strong> Ketahanan Masyarakat Miskin dari
+                            Bencana</span>
+                        <span class="target-code-chip"><strong>1.a</strong> Mobilisasi Sumber Daya Program</span>
+                        <span class="target-code-chip"><strong>1.b</strong> Kerangka Kebijakan Responsif Gender</span>
+                    </div>
+                </div>
+
+                <!-- Goal 2 -->
+                <div class="goal-detail-card" data-pilar="sosial"
+                    data-keywords="goal 2 tanpa kelaparan zero hunger gizi stunting pangan pertanian produktivitas petani benih ternak">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #dda63a;">SDG 2</span>
+                        <div>
+                            <h4>Tanpa Kelaparan (Zero Hunger)</h4>
+                            <span class="pillar-badge pilar-sosial">Pilar Sosial • 8 Target Spesifik (2.1 – 2.5, 2.a –
+                                2.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menghilangkan kelaparan, mencapai ketahanan pangan, meningkatkan gizi,
+                        dan mendorong pertanian berkelanjutan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>2.1</strong> Akses Pangan Bergizi untuk Semua</span>
+                        <span class="target-code-chip"><strong>2.2</strong> Hentikan Segala Bentuk Malnutrisi &
+                            Stunting</span>
+                        <span class="target-code-chip"><strong>2.3</strong> Penggandaan Produktivitas Petani
+                            Kecil</span>
+                        <span class="target-code-chip"><strong>2.4</strong> Praktik Pertanian Berkelanjutan &
+                            Tangguh</span>
+                        <span class="target-code-chip"><strong>2.5</strong> Keanekaragaman Genetik Benih & Hewan</span>
+                        <span class="target-code-chip"><strong>2.a</strong> Investasi Riset & Infrastruktur Desa</span>
+                        <span class="target-code-chip"><strong>2.b</strong> Hapus Pembatasan Perdagangan Pangan</span>
+                        <span class="target-code-chip"><strong>2.c</strong> Stabilitas Pasar Komoditas Pangan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 3 -->
+                <div class="goal-detail-card" data-pilar="sosial"
+                    data-keywords="goal 3 kehidupan sehat sejahtera good health well-being kematian ibu anak hiv tbc malaria jaminan kesehatan rokok kecelakaan lalu lintas">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #4c9f38;">SDG 3</span>
+                        <div>
+                            <h4>Kehidupan Sehat & Sejahtera (Good Health & Well-being)</h4>
+                            <span class="pillar-badge pilar-sosial">Pilar Sosial • 13 Target Spesifik (3.1 – 3.9, 3.a –
+                                3.d)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjamin kehidupan yang sehat dan mendorong kesejahteraan bagi semua
+                        orang di segala usia.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>3.1</strong> Turunkan Kematian Ibu</span>
+                        <span class="target-code-chip"><strong>3.2</strong> Akhiri Kematian Bayi & Balita</span>
+                        <span class="target-code-chip"><strong>3.3</strong> Berantas Epidemi Penyakit Menular</span>
+                        <span class="target-code-chip"><strong>3.4</strong> Kesehatan Mental & Tekan PTM</span>
+                        <span class="target-code-chip"><strong>3.5</strong> Pencegahan Penyalahgunaan Zat/Narkoba</span>
+                        <span class="target-code-chip"><strong>3.6</strong> Tekan Korban Kecelakaan Lalu Lintas</span>
+                        <span class="target-code-chip"><strong>3.7</strong> Layanan Kesehatan Reproduksi & KB</span>
+                        <span class="target-code-chip"><strong>3.8</strong> Jaminan Kesehatan Semesta (UHC/BPJS)</span>
+                        <span class="target-code-chip"><strong>3.9</strong> Kurangi Kematian akibat Polusi &
+                            Kimia</span>
+                        <span class="target-code-chip"><strong>3.a</strong> Pengendalian Tembakau (FCTC)</span>
+                        <span class="target-code-chip"><strong>3.b</strong> Riset Vaksin & Obat Esensial
+                            Terjangkau</span>
+                        <span class="target-code-chip"><strong>3.c</strong> Peningkatan SDM & Tenaga Medis</span>
+                        <span class="target-code-chip"><strong>3.d</strong> Peringatan Dini Krisis Kesehatan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 4 -->
+                <div class="goal-detail-card" data-pilar="sosial"
+                    data-keywords="goal 4 pendidikan berkualitas quality education sekolah gratis paud vokasi beasiswa guru literasi numerasi">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #c5192d;">SDG 4</span>
+                        <div>
+                            <h4>Pendidikan Berkualitas (Quality Education)</h4>
+                            <span class="pillar-badge pilar-sosial">Pilar Sosial • 10 Target Spesifik (4.1 – 4.7, 4.a –
+                                4.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjamin pendidikan berkualitas yang inklusif dan merata serta
+                        kesempatan belajar sepanjang hayat.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>4.1</strong> Pendidikan Dasar & Menengah Gratis</span>
+                        <span class="target-code-chip"><strong>4.2</strong> Pendidikan Usia Dini (PAUD)
+                            Berkualitas</span>
+                        <span class="target-code-chip"><strong>4.3</strong> Akses Pendidikan Tinggi & Kejuruan</span>
+                        <span class="target-code-chip"><strong>4.4</strong> Keterampilan Kerja & Kewirausahaan</span>
+                        <span class="target-code-chip"><strong>4.5</strong> Hapus Kesenjangan Gender Pendidikan</span>
+                        <span class="target-code-chip"><strong>4.6</strong> Kemampuan Literasi & Numerasi
+                            Universal</span>
+                        <span class="target-code-chip"><strong>4.7</strong> Edukasi Pembangunan Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>4.a</strong> Fasilitas Sekolah Ramah Disabilitas</span>
+                        <span class="target-code-chip"><strong>4.b</strong> Perluasan Beasiswa Perguruan Tinggi</span>
+                        <span class="target-code-chip"><strong>4.c</strong> Kualitas & Pelatihan Guru Pendidik</span>
+                    </div>
+                </div>
+
+                <!-- Goal 5 -->
+                <div class="goal-detail-card" data-pilar="sosial"
+                    data-keywords="goal 5 kesetaraan gender gender equality perempuan diskriminasi kekerasan pernikahan dini kepemimpinan politik ekonomi">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #ff3a21;">SDG 5</span>
+                        <div>
+                            <h4>Kesetaraan Gender (Gender Equality)</h4>
+                            <span class="pillar-badge pilar-sosial">Pilar Sosial • 9 Target Spesifik (5.1 – 5.6, 5.a –
+                                5.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mencapai kesetaraan gender dan memberdayakan seluruh kaum perempuan dan
+                        anak perempuan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>5.1</strong> Hapus Segala Bentuk Diskriminasi
+                            Perempuan</span>
+                        <span class="target-code-chip"><strong>5.2</strong> Hapus Kekerasan Seksual & Perdagangan
+                            Orang</span>
+                        <span class="target-code-chip"><strong>5.3</strong> Hapus Pernikahan Anak & Dini</span>
+                        <span class="target-code-chip"><strong>5.4</strong> Menghargai Pekerjaan Domestik &
+                            Perawatan</span>
+                        <span class="target-code-chip"><strong>5.5</strong> Partisipasi Kepemimpinan di Semua
+                            Tingkat</span>
+                        <span class="target-code-chip"><strong>5.6</strong> Hak Kesehatan Seksual & Reproduksi</span>
+                        <span class="target-code-chip"><strong>5.a</strong> Hak Setara atas Sumber Daya &
+                            Properti</span>
+                        <span class="target-code-chip"><strong>5.b</strong> Pemanfaatan Teknologi Informasi</span>
+                        <span class="target-code-chip"><strong>5.c</strong> Kebijakan & Regulasi Penguatan
+                            Kesetaraan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 6 -->
+                <div class="goal-detail-card" data-pilar="lingkungan"
+                    data-keywords="goal 6 air bersih sanitasi layak clean water sanitation air minum limbah daur ulang pencemaran air drainase">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #26bde2;">SDG 6</span>
+                        <div>
+                            <h4>Air Bersih & Sanitasi Layak (Clean Water & Sanitation)</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 8 Target Spesifik (6.1 – 6.6,
+                                6.a, 6.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjamin ketersediaan serta pengelolaan air bersih dan sanitasi yang
+                        berkelanjutan untuk semua.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>6.1</strong> Akses Air Minum Aman & Terjangkau</span>
+                        <span class="target-code-chip"><strong>6.2</strong> Akses Sanitasi Layak & Hentikan BABS</span>
+                        <span class="target-code-chip"><strong>6.3</strong> Kurangi Pencemaran & Daur Ulang Air
+                            Limbah</span>
+                        <span class="target-code-chip"><strong>6.4</strong> Efisiensi Penggunaan Air & Atasi
+                            Kelangkaan</span>
+                        <span class="target-code-chip"><strong>6.5</strong> Pengelolaan Sumber Daya Air Terpadu</span>
+                        <span class="target-code-chip"><strong>6.6</strong> Perlindungan Danau, Sungai & Ekosistem
+                            Air</span>
+                        <span class="target-code-chip"><strong>6.a</strong> Kerjasama Internasional Air &
+                            Desalinasi</span>
+                        <span class="target-code-chip"><strong>6.b</strong> Partisipasi Komunitas Lokal Sanitasi</span>
+                    </div>
+                </div>
+
+                <!-- Goal 7 -->
+                <div class="goal-detail-card" data-pilar="ekonomi"
+                    data-keywords="goal 7 energi bersih terjangkau affordable clean energy listrik terbarukan surya angin efisiensi energi">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #fcc30b;">SDG 7</span>
+                        <div>
+                            <h4>Energi Bersih & Terjangkau (Affordable & Clean Energy)</h4>
+                            <span class="pillar-badge pilar-ekonomi">Pilar Ekonomi • 5 Target Spesifik (7.1 – 7.3, 7.a,
+                                7.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjamin akses terhadap energi yang terjangkau, andal, berkelanjutan,
+                        dan modern untuk semua.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>7.1</strong> Akses Universal Listrik & Energi
+                            Modern</span>
+                        <span class="target-code-chip"><strong>7.2</strong> Peningkatan Pangsa Energi Terbarukan
+                            (EBT)</span>
+                        <span class="target-code-chip"><strong>7.3</strong> Penggandaan Laju Efisiensi Energi</span>
+                        <span class="target-code-chip"><strong>7.a</strong> Fasilitasi Riset & Investasi Energi
+                            Hijau</span>
+                        <span class="target-code-chip"><strong>7.b</strong> Perluasan Infrastruktur Teknologi
+                            Bersih</span>
+                    </div>
+                </div>
+
+                <!-- Goal 8 -->
+                <div class="goal-detail-card" data-pilar="ekonomi"
+                    data-keywords="goal 8 pekerjaan layak pertumbuhan ekonomi decent work economic growth pdb per kapita umkm buruh kerja paksa pariwisata perbankan">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #a21942;">SDG 8</span>
+                        <div>
+                            <h4>Pekerjaan Layak & Pertumbuhan Ekonomi (Decent Work & Growth)</h4>
+                            <span class="pillar-badge pilar-ekonomi">Pilar Ekonomi • 12 Target Spesifik (8.1 – 8.10,
+                                8.a, 8.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mendorong pertumbuhan ekonomi yang inklusif dan berkelanjutan,
+                        kesempatan kerja produktif, serta pekerjaan layak.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>8.1</strong> Pertumbuhan Ekonomi Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>8.2</strong> Diversifikasi Ekonomi & Produktivitas</span>
+                        <span class="target-code-chip"><strong>8.3</strong> Dukungan Pertumbuhan & Finansial UMKM</span>
+                        <span class="target-code-chip"><strong>8.4</strong> Pemisahan Pertumbuhan dari Degradasi
+                            Alam</span>
+                        <span class="target-code-chip"><strong>8.5</strong> Lapangan Kerja Layak & Upah Setara</span>
+                        <span class="target-code-chip"><strong>8.6</strong> Tekan Pengangguran Usia Muda (NEET)</span>
+                        <span class="target-code-chip"><strong>8.7</strong> Hapus Kerja Paksa & Pekerja Anak</span>
+                        <span class="target-code-chip"><strong>8.8</strong> Lindungi Hak Buruh & Keselamatan
+                            Kerja</span>
+                        <span class="target-code-chip"><strong>8.9</strong> Kebijakan Pariwisata Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>8.10</strong> Akses Universal Layanan Perbankan</span>
+                        <span class="target-code-chip"><strong>8.a</strong> Peningkatan Bantuan Perdagangan</span>
+                        <span class="target-code-chip"><strong>8.b</strong> Strategi Ketenagakerjaan Pemuda
+                            Global</span>
+                    </div>
+                </div>
+
+                <!-- Goal 9 -->
+                <div class="goal-detail-card" data-pilar="ekonomi"
+                    data-keywords="goal 9 industri inovasi infrastruktur industry innovation infrastructure jalan jembatan internet riset teknologi manufaktur">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #fd6925;">SDG 9</span>
+                        <div>
+                            <h4>Industri, Inovasi, & Infrastruktur (Industry & Infrastructure)</h4>
+                            <span class="pillar-badge pilar-ekonomi">Pilar Ekonomi • 8 Target Spesifik (9.1 – 9.5, 9.a –
+                                9.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Membangun infrastruktur yang tangguh, industrialisasi yang inklusif, dan
+                        mendorong inovasi.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>9.1</strong> Infrastruktur Berkualitas, Andal &
+                            Tangguh</span>
+                        <span class="target-code-chip"><strong>9.2</strong> Industrialisasi Inklusif &
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>9.3</strong> Akses Kredit Industri Kecil &
+                            Menengah</span>
+                        <span class="target-code-chip"><strong>9.4</strong> Retrofit Industri Ramah Lingkungan</span>
+                        <span class="target-code-chip"><strong>9.5</strong> Penguatan Riset Ilmiah & Inovasi</span>
+                        <span class="target-code-chip"><strong>9.a</strong> Fasilitasi Infrastruktur Negara
+                            Berkembang</span>
+                        <span class="target-code-chip"><strong>9.b</strong> Riset & Pengembangan Teknologi
+                            Domestik</span>
+                        <span class="target-code-chip"><strong>9.c</strong> Akses Internet & TIK Universal
+                            Terjangkau</span>
+                    </div>
+                </div>
+
+                <!-- Goal 10 -->
+                <div class="goal-detail-card" data-pilar="ekonomi"
+                    data-keywords="goal 10 berkurangnya kesenjangan reduced inequalities ketimpangan pendapatan 40 persen terbawah diskriminasi migrasi remitansi">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #dd1367;">SDG 10</span>
+                        <div>
+                            <h4>Berkurangnya Kesenjangan (Reduced Inequalities)</h4>
+                            <span class="pillar-badge pilar-ekonomi">Pilar Ekonomi • 10 Target Spesifik (10.1 – 10.7,
+                                10.a – 10.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mengurangi ketimpangan pendapatan dan peluang di dalam dan antar negara.
+                    </p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>10.1</strong> Pertumbuhan Pendapatan 40% Warga
+                            Terbawah</span>
+                        <span class="target-code-chip"><strong>10.2</strong> Pemberdayaan Sosial & Politik Semua
+                            Kalangan</span>
+                        <span class="target-code-chip"><strong>10.3</strong> Menjamin Peluang Setara & Hapus Hukum
+                            Diskriminatif</span>
+                        <span class="target-code-chip"><strong>10.4</strong> Kebijakan Fiskal, Upah & Perlindungan
+                            Sosial</span>
+                        <span class="target-code-chip"><strong>10.5</strong> Regulasi Ketat Pasar Keuangan Global</span>
+                        <span class="target-code-chip"><strong>10.6</strong> Suara Negara Berkembang di Lembaga
+                            Global</span>
+                        <span class="target-code-chip"><strong>10.7</strong> Tata Kelola Migrasi yang Teratur &
+                            Aman</span>
+                        <span class="target-code-chip"><strong>10.a</strong> Prinsip Perlakuan Khusus Perdagangan</span>
+                        <span class="target-code-chip"><strong>10.b</strong> Saluran Bantuan Pembangunan &
+                            Investasi</span>
+                        <span class="target-code-chip"><strong>10.c</strong> Tekan Biaya Transaksi Pengiriman Uang
+                            Migran</span>
+                    </div>
+                </div>
+
+                <!-- Goal 11: HIGHLIGHT CARD -->
+                <div class="goal-detail-card highlight-card" data-pilar="lingkungan"
+                    data-keywords="goal 11 kota permukiman berkelanjutan sustainable cities jalan rusak lampu mati sampah drainase taman rth transportasi publik bandar lampung">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #fd9d24;">SDG 11</span>
+                        <div>
+                            <h4>Kota & Permukiman Berkelanjutan (Sustainable Cities) ⭐</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 10 Target Spesifik (Fokus
+                                Utama SmartWarga)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjadikan kota dan permukiman inklusif, aman, tangguh, dan
+                        berkelanjutan. Platform SmartWarga dirancang langsung untuk mendukung pencapaian target ini.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip active-highlight"><strong>11.1</strong> Perumahan Layak & Penataan
+                            Kumuh</span>
+                        <span class="target-code-chip active-highlight"><strong>11.2</strong> Transportasi Publik Aman &
+                            Terjangkau</span>
+                        <span class="target-code-chip active-highlight"><strong>11.3</strong> Perencanaan Kota
+                            Partisipatif & Inklusif</span>
+                        <span class="target-code-chip active-highlight"><strong>11.4</strong> Perlindungan Warisan
+                            Budaya & Alam</span>
+                        <span class="target-code-chip active-highlight"><strong>11.5</strong> Ketahanan Risiko Bencana &
+                            Banjir</span>
+                        <span class="target-code-chip active-highlight"><strong>11.6</strong> Pengelolaan Sampah Kota &
+                            Kualitas Udara</span>
+                        <span class="target-code-chip active-highlight"><strong>11.7</strong> Akses Universal Ruang
+                            Terbuka Hijau (RTH)</span>
+                        <span class="target-code-chip active-highlight"><strong>11.a</strong> Perencanaan Wilayah
+                            Perkotaan-Perdesaan</span>
+                        <span class="target-code-chip active-highlight"><strong>11.b</strong> Kebijakan Ketahanan Iklim
+                            & Risiko Bencana</span>
+                        <span class="target-code-chip active-highlight"><strong>11.c</strong> Gedung Tangguh Bencana
+                            Berkelanjutan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 12 -->
+                <div class="goal-detail-card" data-pilar="lingkungan"
+                    data-keywords="goal 12 konsumsi produksi bertanggung jawab responsible consumption production daur ulang sampah makanan food waste limbah b3 3r bisnis hijau">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #bf8b2e;">SDG 12</span>
+                        <div>
+                            <h4>Konsumsi & Produksi Bertanggung Jawab (Responsible Consumption)</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 11 Target Spesifik (12.1 –
+                                12.8, 12.a – 12.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Menjamin pola konsumsi dan produksi yang berkelanjutan serta ramah
+                        lingkungan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>12.1</strong> Kerangka 10 Tahun Pola Konsumsi
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>12.2</strong> Manajemen Berkelanjutan Sumber Daya
+                            Alam</span>
+                        <span class="target-code-chip"><strong>12.3</strong> Pangkas 50% Sampah Makanan (Food
+                            Waste)</span>
+                        <span class="target-code-chip"><strong>12.4</strong> Manajemen Ramah Lingkungan Limbah B3</span>
+                        <span class="target-code-chip"><strong>12.5</strong> Kurangi Timbulan Sampah melalui 3R</span>
+                        <span class="target-code-chip"><strong>12.6</strong> Dorong Laporan Berkelanjutan
+                            Perusahaan</span>
+                        <span class="target-code-chip"><strong>12.7</strong> Praktik Pengadaan Barang Publik
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>12.8</strong> Informasi & Kesadaran Gaya Hidup Selaras
+                            Alam</span>
+                        <span class="target-code-chip"><strong>12.a</strong> Penguatan Kapasitas Iptek Hijau</span>
+                        <span class="target-code-chip"><strong>12.b</strong> Instrumen Monitoring Pariwisata
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>12.c</strong> Rasionalisasi Subsidi Energi Fosil</span>
+                    </div>
+                </div>
+
+                <!-- Goal 13 -->
+                <div class="goal-detail-card" data-pilar="lingkungan"
+                    data-keywords="goal 13 penanganan perubahan iklim climate action mitigasi adaptasi cuaca ekstrem gas rumah kaca emisi bencana alam">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #3f7e44;">SDG 13</span>
+                        <div>
+                            <h4>Penanganan Perubahan Iklim (Climate Action)</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 5 Target Spesifik (13.1 –
+                                13.3, 13.a, 13.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mengambil tindakan cepat untuk mengatasi perubahan iklim dan dampaknya.
+                    </p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>13.1</strong> Penguatan Ketahanan & Adaptasi Bencana
+                            Iklim</span>
+                        <span class="target-code-chip"><strong>13.2</strong> Integrasi Isu Iklim dalam Kebijakan &
+                            Rencana</span>
+                        <span class="target-code-chip"><strong>13.3</strong> Edukasi, Kesadaran & Peringatan Dini
+                            Iklim</span>
+                        <span class="target-code-chip"><strong>13.a</strong> Komitmen Pendanaan Iklim (Green Climate
+                            Fund)</span>
+                        <span class="target-code-chip"><strong>13.b</strong> Mekanisme Kapasitas Iklim Kelompok
+                            Rentan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 14 -->
+                <div class="goal-detail-card" data-pilar="lingkungan"
+                    data-keywords="goal 14 ekosistem lautan life below water laut pesisir pantai ikan terumbu karang sampah plastik teluk lampung nelayan">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #0a97d9;">SDG 14</span>
+                        <div>
+                            <h4>Ekosistem Lautan (Life Below Water)</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 10 Target Spesifik (14.1 –
+                                14.7, 14.a – 14.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Melestarikan dan memanfaatkan samudera, laut, dan sumber daya kelautan
+                        secara berkelanjutan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>14.1</strong> Cegah & Kurangi Polusi Laut (Sampah
+                            Plastik)</span>
+                        <span class="target-code-chip"><strong>14.2</strong> Kelola & Lindungi Ekosistem Pesisir &
+                            Laut</span>
+                        <span class="target-code-chip"><strong>14.3</strong> Minimalisasi Dampak Pengasaman Laut</span>
+                        <span class="target-code-chip"><strong>14.4</strong> Hentikan Penangkapan Ikan Ilegal &
+                            Berlebih</span>
+                        <span class="target-code-chip"><strong>14.5</strong> Konservasi Minimal 10% Wilayah Pesisir &
+                            Laut</span>
+                        <span class="target-code-chip"><strong>14.6</strong> Larang Subsidi yang Memicu
+                            Overfishing</span>
+                        <span class="target-code-chip"><strong>14.7</strong> Peningkatan Manfaat Ekonomi Nelayan
+                            Kecil</span>
+                        <span class="target-code-chip"><strong>14.a</strong> Riset Iptek Kelautan & Transfer
+                            Teknologi</span>
+                        <span class="target-code-chip"><strong>14.b</strong> Akses Nelayan Tradisional ke Sumber Daya
+                            Laut</span>
+                        <span class="target-code-chip"><strong>14.c</strong> Penegakan Hukum Laut Internasional
+                            (UNCLOS)</span>
+                    </div>
+                </div>
+
+                <!-- Goal 15 -->
+                <div class="goal-detail-card" data-pilar="lingkungan"
+                    data-keywords="goal 15 ekosistem daratan life on land hutan deforestasi reboisasi keanekaragaman hayati satwa lahan kritis degradasi tanah">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #56c02b;">SDG 15</span>
+                        <div>
+                            <h4>Ekosistem Daratan (Life on Land)</h4>
+                            <span class="pillar-badge pilar-lingkungan">Pilar Lingkungan • 12 Target Spesifik (15.1 –
+                                15.9, 15.a – 15.c)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Melindungi, memulihkan, dan mendorong pemanfaatan ekosistem daratan
+                        secara berkelanjutan serta mengelola hutan lestari.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>15.1</strong> Konservasi Hutan, Lahan Basah &
+                            Pegunungan</span>
+                        <span class="target-code-chip"><strong>15.2</strong> Hentikan Deforestasi & Tingkatkan
+                            Reboisasi</span>
+                        <span class="target-code-chip"><strong>15.3</strong> Pemulihan Lahan Kritis & Kering</span>
+                        <span class="target-code-chip"><strong>15.4</strong> Perlindungan Ekosistem Pegunungan</span>
+                        <span class="target-code-chip"><strong>15.5</strong> Cegah Kepunahan Spesies Terancam</span>
+                        <span class="target-code-chip"><strong>15.6</strong> Pembagian Adil Manfaat Sumber Daya
+                            Genetik</span>
+                        <span class="target-code-chip"><strong>15.7</strong> Berantas Perburuan & Penyelundupan Satwa
+                            Liar</span>
+                        <span class="target-code-chip"><strong>15.8</strong> Kendalikan Spesies Asing Invasif</span>
+                        <span class="target-code-chip"><strong>15.9</strong> Integrasi Nilai Ekosistem dalam
+                            Pembangunan</span>
+                        <span class="target-code-chip"><strong>15.a</strong> Mobilisasi Pendanaan Keanekaragaman
+                            Hayati</span>
+                        <span class="target-code-chip"><strong>15.b</strong> Pembiayaan Konservasi Hutan
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>15.c</strong> Dukungan Mata Pencaharian Warga Sekitar
+                            Hutan</span>
+                    </div>
+                </div>
+
+                <!-- Goal 16 -->
+                <div class="goal-detail-card" data-pilar="hukum"
+                    data-keywords="goal 16 perdamaian keadilan kelembagaan tangguh peace justice strong institutions korupsi transparansi suap keterbukaan informasi identitas akta anak hukum">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #00689d;">SDG 16</span>
+                        <div>
+                            <h4>Perdamaian, Keadilan, & Kelembagaan Tangguh (Peace & Justice)</h4>
+                            <span class="pillar-badge pilar-hukum">Pilar Tata Kelola • 12 Target Spesifik (16.1 – 16.10,
+                                16.a, 16.b)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Mendorong masyarakat damai dan inklusif, menyediakan akses keadilan, dan
+                        membangun lembaga akuntabel di semua tingkatan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>16.1</strong> Kurangi Segala Bentuk Kekerasan &
+                            Kematian</span>
+                        <span class="target-code-chip"><strong>16.2</strong> Lindungi Anak dari Kekerasan &
+                            Eksploitasi</span>
+                        <span class="target-code-chip"><strong>16.3</strong> Tegakkan Supremasi Hukum & Keadilan
+                            Setara</span>
+                        <span class="target-code-chip"><strong>16.4</strong> Perangi Aliran Keuangan Ilegal &
+                            Senjata</span>
+                        <span class="target-code-chip"><strong>16.5</strong> Berantas Korupsi & Penyuapan di Semua
+                            Lembaga</span>
+                        <span class="target-code-chip"><strong>16.6</strong> Kembangkan Institusi Transparan &
+                            Akuntabel</span>
+                        <span class="target-code-chip"><strong>16.7</strong> Pengambilan Keputusan Responsif &
+                            Partisipatif</span>
+                        <span class="target-code-chip"><strong>16.8</strong> Partisipasi Negara Berkembang di Lembaga
+                            Global</span>
+                        <span class="target-code-chip"><strong>16.9</strong> Identitas Hukum Universal & Akta
+                            Kelahiran</span>
+                        <span class="target-code-chip"><strong>16.10</strong> Jamin Hak Akses Publik terhadap
+                            Informasi</span>
+                        <span class="target-code-chip"><strong>16.a</strong> Penguatan Kapasitas Lembaga
+                            Anti-Kekerasan</span>
+                        <span class="target-code-chip"><strong>16.b</strong> Penegakan Hukum & Kebijakan
+                            Nondiskriminatif</span>
+                    </div>
+                </div>
+
+                <!-- Goal 17 -->
+                <div class="goal-detail-card" data-pilar="ekonomi"
+                    data-keywords="goal 17 kemitraan untuk mencapai tujuan partnerships for the goals pendanaan global pajak transfer teknologi data statistik perdagangan multilateral utang">
+                    <div class="goal-detail-header">
+                        <span class="goal-num-badge" style="background: #19486a;">SDG 17</span>
+                        <div>
+                            <h4>Kemitraan untuk Mencapai Tujuan (Partnerships for the Goals)</h4>
+                            <span class="pillar-badge pilar-ekonomi">Pilar Ekonomi / Kemitraan • 19 Target Spesifik
+                                (17.1 – 17.19)</span>
+                        </div>
+                    </div>
+                    <p class="goal-detail-desc">Memperkuat sarana pelaksanaan dan merevitalisasi kemitraan global untuk
+                        pembangunan berkelanjutan.</p>
+                    <div class="goal-targets-chips">
+                        <span class="target-code-chip"><strong>17.1</strong> Mobilisasi Pendapatan Pajak Domestik</span>
+                        <span class="target-code-chip"><strong>17.2</strong> Pemenuhan Komitmen Bantuan Pembangunan
+                            (ODA)</span>
+                        <span class="target-code-chip"><strong>17.3</strong> Mobilisasi Sumber Pembiayaan
+                            Tambahan</span>
+                        <span class="target-code-chip"><strong>17.4</strong> Manajemen Keberlanjutan Utang Jangka
+                            Panjang</span>
+                        <span class="target-code-chip"><strong>17.5</strong> Rezim Promosi Investasi Negara
+                            Berkembang</span>
+                        <span class="target-code-chip"><strong>17.6</strong> Kerjasama Iptek & Inovasi
+                            Internasional</span>
+                        <span class="target-code-chip"><strong>17.7</strong> Transfer Teknologi Ramah Lingkungan</span>
+                        <span class="target-code-chip"><strong>17.8</strong> Bank Teknologi & Kapasitas TIK</span>
+                        <span class="target-code-chip"><strong>17.9</strong> Penguatan Kapasitas Implementasi
+                            SDGs</span>
+                        <span class="target-code-chip"><strong>17.10</strong> Sistem Perdagangan Terbuka &
+                            Nondiskriminatif</span>
+                        <span class="target-code-chip"><strong>17.11</strong> Peningkatan Pangsa Ekspor Negara
+                            Berkembang</span>
+                        <span class="target-code-chip"><strong>17.12</strong> Akses Pasar Bebas Bea & Kuota</span>
+                        <span class="target-code-chip"><strong>17.13</strong> Stabilitas Makroekonomi Global</span>
+                        <span class="target-code-chip"><strong>17.14</strong> Koherensi Kebijakan Pembangunan
+                            Berkelanjutan</span>
+                        <span class="target-code-chip"><strong>17.15</strong> Menghormati Kedaulatan Kebijakan
+                            Nasional</span>
+                        <span class="target-code-chip"><strong>17.16</strong> Kemitraan Multipihak Global Berbagi
+                            Pengetahuan</span>
+                        <span class="target-code-chip"><strong>17.17</strong> Kemitraan Publik-Swasta & Masyarakat
+                            Sipil</span>
+                        <span class="target-code-chip"><strong>17.18</strong> Ketersediaan Data Berkualitas, Tepat Waktu
+                            & Terpilah</span>
+                        <span class="target-code-chip"><strong>17.19</strong> Pengembangan Pengukuran Kemajuan di Luar
+                            PDB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: 10 TARGET SPESIFIK SDG 11 (FOKUS UTAMA) -->
+        <div class="sdg-tab-content" id="tab-sdg11" role="tabpanel" hidden>
+            <div class="sdg11-highlight-banner">
+                <div class="banner-badge">Fokus Utama SmartWarga</div>
+                <h3>10 Target Terukur SDG 11: Kota & Permukiman Berkelanjutan</h3>
+                <p>SDG 11 memiliki <strong>7 target teknis (11.1 – 11.7)</strong> dan <strong>3 sarana implementasi
+                        (11.a – 11.c)</strong>. Seluruh target ini terhubung langsung dengan partisipasi warga di Kota
+                    Bandar Lampung:</p>
+            </div>
+
+            <div class="target-items-list" id="sdg11TargetList">
+                <!-- Target 11.1 -->
+                <div class="target-item-card"
+                    data-keywords="11.1 perumahan layak kumuh sanitasi permukiman air dasar pesisir bedah rumah">
+                    <div class="target-code-badge">Target 11.1</div>
+                    <div class="target-content">
+                        <h4>Akses Perumahan Layak & Penataan Kawasan Kumuh</h4>
+                        <p class="target-official-text">"Pada tahun 2030, menjamin akses bagi semua terhadap perumahan
+                            yang layak, aman, dan terjangkau serta pelayanan dasar, dan menata kawasan kumuh."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Penataan sanitasi dan perbaikan fasilitas dasar di permukiman padat dan pesisir teluk
+                            Lampung. Laporan warga membantu pemetaan titik fasilitas yang membutuhkan intervensi
+                            mendesak.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.2 -->
+                <div class="target-item-card"
+                    data-keywords="11.2 transportasi publik angkutan umum jalan rusak lampu jalan halte trotoar disabilitas keselamatan">
+                    <div class="target-code-badge">Target 11.2</div>
+                    <div class="target-content">
+                        <h4>Sistem Transportasi Aman, Terjangkau & Berkelanjutan</h4>
+                        <p class="target-official-text">"Pada tahun 2030, menyediakan akses terhadap sistem transportasi
+                            yang aman, terjangkau, mudah diakses, dan berkelanjutan untuk semua, meningkatkan
+                            keselamatan lalu lintas, terutama dengan memperluas angkutan umum, dengan perhatian khusus
+                            pada kebutuhan mereka yang berada dalam situasi rentan, perempuan, anak-anak, penyandang
+                            disabilitas, dan lansia."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Aduan jalan berlubang, lampu penerangan jalan umum (PJU) padam di titik rawan kecelakaan,
+                            serta perbaikan fasilitas halte dan trotoar dapat langsung dilaporkan melalui menu
+                            <strong>Lapor SmartWarga</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.3 -->
+                <div class="target-item-card"
+                    data-keywords="11.3 urbanisasi partisipatif inklusif partisipasi warga perencanaan kota aduan aspirasi transparansi">
+                    <div class="target-code-badge">Target 11.3</div>
+                    <div class="target-content">
+                        <h4>Urbanisasi Inklusif & Pengelolaan Kota Partisipatif</h4>
+                        <p class="target-official-text">"Pada tahun 2030, memperkuat urbanisasi yang inklusif dan
+                            berkelanjutan serta kapasitas perencanaan dan pengelolaan permukiman yang partisipatif,
+                            terpadu, dan berkelanjutan di semua negara."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            SmartWarga mengimplementasikan target 11.3 secara digital: memberikan setiap warga kota hak
+                            dan platform yang setara untuk ikut mengawal, mengawasi, dan berpartisipasi dalam
+                            pemeliharaan kota.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.4 -->
+                <div class="target-item-card"
+                    data-keywords="11.4 warisan budaya cagar budaya alam tradisi tapis lampung situs sejarah">
+                    <div class="target-code-badge">Target 11.4</div>
+                    <div class="target-content">
+                        <h4>Perlindungan Warisan Budaya & Warisan Alam Dunia</h4>
+                        <p class="target-official-text">"Memperkuat upaya untuk melindungi dan melestarikan warisan
+                            budaya dan alam dunia."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Pemeliharaan kawasan cagar budaya kain tapis, rumah adat lamban pesagi, ornamen siger, serta
+                            ruang konservasi perbukitan dan pesisir teluk kota.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.5 -->
+                <div class="target-item-card"
+                    data-keywords="11.5 ketahanan bencana banjir drainase saluran air tanggul cuaca ekstrem bpbd peringatan dini">
+                    <div class="target-code-badge">Target 11.5</div>
+                    <div class="target-content">
+                        <h4>Ketahanan Terhadap Bencana & Pengurangan Risiko Korban</h4>
+                        <p class="target-official-text">"Pada tahun 2030, secara signifikan mengurangi jumlah kematian
+                            dan jumlah orang yang terkena dampak bencana, termasuk bencana terkait air/banjir, dengan
+                            fokus melindungi masyarakat miskin dan kelompok rentan."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Laporan saluran drainase tersumbat dan tanggul rusak via SmartWarga mempercepat respon
+                            normalisasi aliran air sebelum musim penghujan lebat, meminimalkan potensi banjir genangan
+                            di kawasan permukiman.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.6 -->
+                <div class="target-item-card"
+                    data-keywords="11.6 pengelolaan sampah timbulan dlh 850 ton 845 ton kualitas udara perda 6 2023 tps tpa bakung">
+                    <div class="target-code-badge">Target 11.6</div>
+                    <div class="target-content">
+                        <h4>Pengurangan Dampak Lingkungan Kota & Pengelolaan Sampah</h4>
+                        <p class="target-official-text">"Pada tahun 2030, mengurangi dampak lingkungan perkotaan yang
+                            merugikan per kapita, termasuk dengan memberi perhatian khusus pada kualitas udara serta
+                            pengelolaan sampah perkotaan dan limbah lainnya."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Data Resmi DLH Bandar Lampung:</span>
+                            Berdasarkan data publikasi resmi Dinas Lingkungan Hidup (DLH) Kota Bandar Lampung (2023),
+                            timbulan sampah kota tercatat <strong>850 ton/hari</strong> dengan volume terkelola
+                            <strong>845 ton/hari</strong> berlandaskan <strong>Perda Kota Bandar Lampung No. 6 Tahun
+                                2023</strong>. Kategori laporan <em>Sampah</em> di SmartWarga membantu DLH mendeteksi
+                            timbulan sampah liar lebih cepat.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.7 -->
+                <div class="target-item-card"
+                    data-keywords="11.7 ruang terbuka hijau rth taman publik ramah anak lansia disabilitas pohon trotoar taman gajah">
+                    <div class="target-code-badge">Target 11.7</div>
+                    <div class="target-content">
+                        <h4>Akses Universal Ruang Terbuka Hijau & Ruang Publik Aman</h4>
+                        <p class="target-official-text">"Pada tahun 2030, menyediakan akses universal terhadap ruang
+                            terbuka hijau dan ruang publik yang aman, inklusif, dan mudah diakses, terutama bagi
+                            perempuan, anak-anak, lansia, dan penyandang disabilitas."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Pengawasan kondisi taman kota (seperti Elephant Park/Taman Gajah, Hutan Kota Way Halim) dan
+                            pelaporan fasilitas taman yang rusak atau lampu padam agar ruang terbuka hijau tetap nyaman
+                            dan aman dikunjungi keluarga.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.a -->
+                <div class="target-item-card"
+                    data-keywords="11.a perencanaan wilayah tata ruang kota desa aglomerasi rtrw konektivitas lampung selatan pesawaran">
+                    <div class="target-code-badge">Target 11.a</div>
+                    <div class="target-content">
+                        <h4>Keterpaduan Perencanaan Wilayah Perkotaan & Perdesaan</h4>
+                        <p class="target-official-text">"Mendukung hubungan ekonomi, sosial, dan lingkungan yang positif
+                            antara kawasan perkotaan, pinggiran kota, dan perdesaan melalui penguatan perencanaan
+                            pembangunan nasional dan regional."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Sinkronisasi tata ruang wilayah Bandar Lampung dengan koridor perbatasan Lampung Selatan dan
+                            Pesawaran guna menjamin kelancaran logistik dan keberlanjutan daya dukung lingkungan.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.b -->
+                <div class="target-item-card"
+                    data-keywords="11.b kebijakan iklim adaptasi mitigasi sendai framework resiko bencana bpbd ketahanan terpadu">
+                    <div class="target-code-badge">Target 11.b</div>
+                    <div class="target-content">
+                        <h4>Penerapan Kebijakan Ketahanan Terpadu & Kerangka Sendai</h4>
+                        <p class="target-official-text">"Secara substansial meningkatkan jumlah kota yang mengadopsi dan
+                            menerapkan kebijakan terpadu untuk inklusi, efisiensi sumber daya, mitigasi dan adaptasi
+                            perubahan iklim, serta ketahanan bencana sesuai Kerangka Kerja Sendai 2015–2030."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Rencana Aksi Daerah Adaptasi Perubahan Iklim (RAD-API) Pemkot Bandar Lampung yang memadukan
+                            mitigasi bencana air, kenaikan muka laut, dan kesiapsiagaan darurat masyarakat.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target 11.c -->
+                <div class="target-item-card"
+                    data-keywords="11.c bangunan gedung hijau tahan gempa material lokal pbg berkelanjutan pesisir">
+                    <div class="target-code-badge">Target 11.c</div>
+                    <div class="target-content">
+                        <h4>Pembangunan Gedung Tangguh Bencana & Material Lokal</h4>
+                        <p class="target-official-text">"Mendukung pembangunan gedung yang berkelanjutan dan tangguh
+                            bencana dengan memanfaatkan bahan baku dan kearifan lokal."</p>
+                        <div class="target-local-context">
+                            <span class="context-tag">📍 Kaitan Nyata di Bandar Lampung:</span>
+                            Standar Persetujuan Bangunan Gedung (PBG) ramah lingkungan dan berstruktur tahan gempa di
+                            zona geologi sesar Sumatera.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SUMBER DATA & LANDASAN HUKUM RESMI -->
+        <div class="sdg-tab-content" id="tab-sources" role="tabpanel" hidden>
+            <div class="sdg-sources-legal-box">
+                <div class="legal-box-header">
+                    <span class="legal-icon" aria-hidden="true">🏛️</span>
+                    <div>
+                        <h3>Landasan Hukum & Sumber Rujukan Terverifikasi</h3>
+                        <p>Seluruh angka 17 Tujuan, 169 Target Terukur, dan data indikator perkotaan merujuk secara
+                            ketat pada dokumen resmi internasional dan perundang-undangan nasional Republik Indonesia:
+                        </p>
+                    </div>
+                </div>
+
+                <div class="source-reference-cards">
+                    <div class="source-card">
+                        <div class="source-card-header">
+                            <span class="source-icon">🌐</span>
+                            <div>
+                                <strong>Perserikatan Bangsa-Bangsa (United Nations)</strong>
+                                <small>Dokumen Resolusi Sidang Umum PBB A/RES/70/1</small>
+                            </div>
+                        </div>
+                        <p>Resolusi resmi <em>"Transforming our world: the 2030 Agenda for Sustainable Development"</em>
+                            yang mengesahkan 17 Goals dan 169 Targets secara konsensus oleh 193 negara anggota pada
+                            September 2015.</p>
+                        <a href="https://sdgs.un.org/goals" target="_blank" rel="noopener noreferrer"
+                            class="source-link">Kunjungi Portal Resmi PBB (sdgs.un.org/goals) &rarr;</a>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-card-header">
+                            <span class="source-icon">🇮🇩</span>
+                            <div>
+                                <strong>Kementerian PPN / Bappenas RI</strong>
+                                <small>Sekretariat Nasional TPB/SDGs Indonesia</small>
+                            </div>
+                        </div>
+                        <p>Penyusun <em>Peta Jalan (Roadmap) SDGs Indonesia Menuju 2030</em> dan <em>Metadata Indikator
+                                TPB Indonesia Edisi II</em>. Menjadi acuan pembagian 169 target ke dalam 4 Pilar
+                            Pembangunan Berkelanjutan (Sosial, Ekonomi, Lingkungan, Hukum & Tata Kelola).</p>
+                        <a href="https://sdgs.bappenas.go.id" target="_blank" rel="noopener noreferrer"
+                            class="source-link">Kunjungi Sekretariat Nasional SDGs (sdgs.bappenas.go.id) &rarr;</a>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-card-header">
+                            <span class="source-icon">📜</span>
+                            <div>
+                                <strong>Peraturan Presiden Republik Indonesia</strong>
+                                <small>Perpres No. 59 Tahun 2017 & Perpres No. 111 Tahun 2022</small>
+                            </div>
+                        </div>
+                        <p>Payung hukum tertinggi pelaksanaan dan pencapaian Tujuan Pembangunan Berkelanjutan di
+                            Indonesia. Mengamanatkan integrasi target SDGs ke dalam Rencana Pembangunan Jangka Menengah
+                            Daerah (RPJMD) pemerintah provinsi dan kabupaten/kota.</p>
+                        <a href="https://peraturan.bpk.go.id/Details/232493/perpres-no-111-tahun-2022" target="_blank"
+                            rel="noopener noreferrer" class="source-link">Buka Salinan Perpres 111/2022 di JDIH BPK RI
+                            &rarr;</a>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-card-header">
+                            <span class="source-icon">📊</span>
+                            <div>
+                                <strong>Badan Pusat Statistik (BPS) Kota Bandar Lampung</strong>
+                                <small>Laporan Publikasi & Indikator Kesejahteraan Rakyat</small>
+                            </div>
+                        </div>
+                        <p>Penyedia data statistik kependudukan (1.088.200 jiwa proyeksi 2025) dan indikator pembangunan
+                            daerah dalam publikasi resmi <em>Kota Bandar Lampung Dalam Angka 2026</em>.</p>
+                        <a href="https://bandarlampungkota.bps.go.id" target="_blank" rel="noopener noreferrer"
+                            class="source-link">Kunjungi Portal BPS Kota Bandar Lampung &rarr;</a>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-card-header">
+                            <span class="source-icon">🏙️</span>
+                            <div>
+                                <strong>Dinas Lingkungan Hidup (DLH) Kota Bandar Lampung</strong>
+                                <small>Data Timbulan Sampah & Perda No. 6 Tahun 2023</small>
+                            </div>
+                        </div>
+                        <p>Publikasi data timbulan sampah <strong>850 ton/hari</strong> dan penanganan sampah
+                            <strong>845 ton/hari</strong> (2023) yang mendukung pencapaian Target 11.6 serta SOP
+                            Pemilahan Sampah Perda Kota Bandar Lampung No. 6 Tahun 2023.
+                        </p>
+                        <a href="https://bandarlampungkota.go.id/new/berita-12629--Jumlah-Timbulan-Sampah-di-Kota-Bandar-Lampung--2011-2023-.html"
+                            target="_blank" rel="noopener noreferrer" class="source-link">Buka Berita & Data DLH di
+                            Situs Pemkot Bandar Lampung &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <div class="weather-modal" id="weatherModal" role="dialog" aria-modal="true" aria-labelledby="weatherTitle"
+        aria-hidden="true" hidden>
+        <section class="weather-card">
+            <button type="button" class="weather-close" id="btnTutupCuaca" aria-label="Tutup">&times;</button>
+            <p class="weather-location">📍 Cuaca saat ini</p>
+            <h2 id="weatherTitle">Bandar Lampung</h2>
+            <section class="district-weather" aria-labelledby="districtWeatherTitle">
+                <div class="district-weather-heading">
+                    <div>
+                        <h3 id="districtWeatherTitle">Cuaca setiap kecamatan</h3>
+                        <p>Data terkini dari seluruh 20 kecamatan Bandar Lampung</p>
+                    </div>
+                    <span id="districtWeatherUpdated" class="district-weather-updated" aria-live="polite">
+                        Menyiapkan data...
+                    </span>
+                </div>
+                <div id="districtWeatherGrid" class="district-weather-grid"></div>
+                <p class="weather-location-note">
+                    Data kondisi terkini dari Open-Meteo merupakan estimasi model untuk grid terdekat, bukan pengukuran
+                    sensor langsung.
+                    Pembaruan otomatis setiap 10 menit saat panel cuaca terbuka.
+                </p>
+                <button type="button" class="btn btn-primary btn-full" id="btnMuatSemuaCuaca">
+                    Perbarui Cuaca Semua Kecamatan
+                </button>
+            </section>
+            <details class="weather-location-details">
+                <summary>Lihat detail kecamatan atau lokasi GPS</summary>
+                <button type="button" class="btn btn-outline" id="btnCuacaLokasi">
+                    📍 Gunakan Lokasi Saya
+                </button>
+                <label class="weather-district-label" for="weatherDistrict">Pilih kecamatan tujuan</label>
+                <select id="weatherDistrict" class="weather-district-select">
+                    <option value="">Pilih kecamatan</option>
+                    <option>Bumi Waras</option>
+                    <option>Enggal</option>
+                    <option>Kedamaian</option>
+                    <option>Kedaton</option>
+                    <option>Kemiling</option>
+                    <option>Labuhan Ratu</option>
+                    <option>Langkapura</option>
+                    <option>Panjang</option>
+                    <option>Rajabasa</option>
+                    <option>Sukabumi</option>
+                    <option>Sukarame</option>
+                    <option>Tanjung Karang Barat</option>
+                    <option>Tanjung Karang Pusat</option>
+                    <option>Tanjung Karang Timur</option>
+                    <option>Tanjung Senang</option>
+                    <option>Teluk Betung Barat</option>
+                    <option>Teluk Betung Selatan</option>
+                    <option>Teluk Betung Timur</option>
+                    <option>Teluk Betung Utara</option>
+                    <option>Way Halim</option>
+                </select>
+                <button type="button" class="btn btn-outline" id="btnCuacaKecamatan">
+                    Lihat Cuaca Kecamatan
+                </button>
+                <small class="weather-location-note">
+                    Pilih kecamatan lalu tekan “Lihat Cuaca Kecamatan”. Cuaca memakai titik perkiraan kecamatan dari
+                    OpenStreetMap; prakiraan Open-Meteo menggunakan grid cuaca terdekat, bukan pengukuran persis di
+                    setiap lokasi.
+                </small>
+            </details>
+            <div id="weatherContent" class="weather-content" aria-live="polite">
+                <p>Tekan tombol untuk memuat cuaca terkini.</p>
+            </div>
+            <div class="weather-actions">
+                <button type="button" class="btn btn-primary" id="btnMuatCuaca">Muat Ulang Cuaca</button>
+                <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Sumber data: Open-Meteo</a>
+            </div>
+        </section>
+    </div>
+
+    <section class="chat-widget" aria-label="Asisten SmartWarga">
+        <div class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
+            <header class="chat-header">
+                <div class="chat-avatar" aria-hidden="true">🤖</div>
+                <div>
+                    <h2 id="chatTitle">Asisten SmartWarga</h2>
+                    <p>Tanya seputar laporan warga</p>
+                </div>
+                <div class="chat-header-actions">
+                    <button type="button" class="chat-refresh" id="chatReset" aria-label="Mulai ulang percakapan"
+                        title="Mulai ulang percakapan">🔄</button>
+                    <button type="button" class="chat-close" id="chatClose" aria-label="Tutup chatbot">&times;</button>
+                </div>
+            </header>
+            <div class="chat-privacy">
+                Asisten panduan lokal. Pesan tidak dikirim ke layanan pihak ketiga.
+            </div>
+            <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions">
+                <!-- Template Sambutan untuk Pengunjung Pertama Kali -->
+                <div class="chat-welcome-card" id="chatWelcomeCard">
+                    <div class="welcome-header">
+                        <div class="welcome-avatar-wrapper">
+                            <span class="welcome-avatar">🤖</span>
+                            <span class="welcome-status-dot" title="Aktif"></span>
+                        </div>
+                        <div class="welcome-title-group">
+                            <span class="welcome-badge">Asisten SmartWarga</span>
+                            <h3 class="welcome-greeting" id="welcomeGreeting">Halo, Selamat Datang! 👋</h3>
+                        </div>
+                    </div>
+                    <div class="welcome-body">
+                        <p class="welcome-intro">
+                            Senang bertemu dengan Anda di <strong>SmartWarga Bandar Lampung</strong>! Saya siap memandu
+                            Anda membuat laporan fasilitas publik atau memantau status aduan warga secara cepat dan
+                            mudah.
+                        </p>
+                        <div class="welcome-feature-list">
+                            <div class="welcome-feature-item">
+                                <span class="feature-icon">📝</span>
+                                <div>
+                                    <strong>Buat Laporan Baru</strong>
+                                    <small>Panduan lapor jalan rusak, lampu padam, drainase & sampah.</small>
+                                </div>
+                            </div>
+                            <div class="welcome-feature-item">
+                                <span class="feature-icon">🔍</span>
+                                <div>
+                                    <strong>Lacak Status Aduan</strong>
+                                    <small>Pantau tindak lanjut laporan via nomor ID atau email Anda.</small>
+                                </div>
+                            </div>
+                            <div class="welcome-feature-item">
+                                <span class="feature-icon">📍</span>
+                                <div>
+                                    <strong>Titik Peta & Foto Bukti</strong>
+                                    <small>Cara menandai koordinat lokasi akurat dan aturan foto.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="welcome-action-hint">
+                            <span>💡 Pilih pertanyaan cepat di bawah untuk memulai:</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button type="button" data-prompt="Bagaimana cara membuat laporan?">📝 Cara buat laporan</button>
+                <button type="button" data-prompt="Bagaimana cara melacak laporan?">🔍 Cara melacak laporan</button>
+                <button type="button" data-prompt="Bagaimana cara menentukan titik lokasi di peta?">📍 Panduan lokasi
+                    peta</button>
+                <button type="button" data-prompt="Apakah saya harus mengunggah foto?">📸 Format foto bukti</button>
+                <button type="button" data-prompt="Di mana data laporan saya disimpan?">💾 Penyimpanan &
+                    privasi</button>
+            </div>
+            <form class="chat-form" id="chatForm">
+                <label class="visually-hidden" for="chatInput">Tulis pertanyaan</label>
+                <textarea id="chatInput" rows="1" maxlength="1200" placeholder="Tulis pertanyaan..."
+                    required></textarea>
+                <button type="submit" id="chatSend" aria-label="Kirim pertanyaan">Kirim</button>
+            </form>
+        </div>
+        <button type="button" class="chat-launcher" id="chatLauncher" aria-expanded="false" aria-controls="chatPanel">
+            <span aria-hidden="true">💬</span><span>Tanya Asisten</span>
+        </button>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>🏙️ SmartWarga</h3>
+                    <p>Empowering Global Innovators for an Intelligent Future</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">Mendukung SDG 11: Kota dan
+                        Permukiman yang Berkelanjutan</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigasi</h4>
+                    <a href="#beranda">Beranda</a>
+                    <a href="#lapor">Buat Laporan</a>
+                    <a href="#lacak">Lacak Laporan</a>
+                    <a href="#peta">Peta Sebaran</a>
+                    <a href="#edukasi">Edukasi</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SmartWarga | Dikembangkan oleh Tim SmartWarga</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAp1K4zFypWfGsehQCIFxr4LfyX7uNqrLM&amp;callback=initGoogleMaps&amp;loading=async"></script>
+</body>
+
+</html>
